@@ -22,6 +22,8 @@ Some things to keep in mind for the coding challenge:
     more about your thought process and decisions you made writing the code.
   * We say this should take 1-2 hours because we don't want to take up more of
     your time than that, but feel free to spend as much time on it as you need.
+  * If you need to, add additional libraries to the Gemfile or more files to
+    the project. Add more unit tests if you need them.
 
 ## Bowling scoring
 
@@ -95,13 +97,13 @@ same number of frames.
 ## Output format
 
 The response body should also be JSON-encoded, as an object with two keys:
-`players`, and `winner`. `players` should be an object with player names as
+`scores`, and `winner`. `scores` should be an object with player names as
 keys and their _total_ score from all frames as values; `winner` should just be
 a string, the winning player's name.
 
 ```json
 {
-  "players": {
+  "scores": {
     "Hannibal Smith": 300,
     "B. A. Baracus": 276,
     "Templeton Peck": 190,
