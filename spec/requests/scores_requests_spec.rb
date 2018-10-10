@@ -1,3 +1,5 @@
+# These are some RSpec tests to get you started and give a clear idea how we
+# will test this on our end. Please feel free to add any tests you want here.
 require 'rails_helper'
 
 RSpec.describe '/scores requests', type: :request do
@@ -15,9 +17,6 @@ RSpec.describe '/scores requests', type: :request do
   end
 
   describe 'POST /scores' do
-    # We've provided a couple of tests to show the input/output formats and to
-    # give a structure in which you can put your own tests. Use the
-    # `request_body` and `parsed_response` helpers, defined above.
     context 'happy path - a perfect game' do
       let(:request_body) do
         {
@@ -49,20 +48,32 @@ RSpec.describe '/scores requests', type: :request do
       end
     end
 
-    # The scoring endpoint should also be able to show who is the current
-    # winner and the score so far for an incomplete game.
-    context 'happy path - two bowlers mid-game' do
+    context 'a complete game' do
       let(:request_body) do
         {
           'Frank Zappa': [
-            { 'score': 'x' },  # 10 + 8 + 3
-            { 'score': 8 },    # 8
-            { 'score': 3 },    # 3
+            { 'score': '-' },
+            { 'score': 1 },
+            { 'score': 2 },
+            { 'score': 3 },
+            { 'score': 'F' },
+            { 'score': '3/' },
+            { 'score': 8 },
+            { 'score': 'x' },
+            { 'score': 7 },
+            { 'score': 3 },
           ],
           'Don Van Vliet': [
-            { 'score': 7 },    # 7
-            { 'score': '4/' }, # 10 + 6
-            { 'score': 6 },    # 6
+            { 'score': '/' },
+            { 'score': 3 },
+            { 'score': 9 },
+            { 'score': 'X' },
+            { 'score': 'f' },
+            { 'score': 1 },
+            { 'score': 'X' },
+            { 'score': '-' },
+            { 'score': 8 },
+            { 'score': 7 },
           ],
         }.to_json
       end
@@ -72,12 +83,12 @@ RSpec.describe '/scores requests', type: :request do
       end
 
       it 'chooses the correct winner' do
-        expect(parsed_response['winner']).to eq 'Frank Zappa'
+        expect(parsed_response['winner']).to eq 'Don Van Vliet'
       end
 
       it 'scores the game correctly' do
-        expect(parsed_response['scores']['Frank Zappa']).to eq 32
-        expect(parsed_response['scores']['Don Van Vliet']).to eq 29
+        expect(parsed_response['scores']['Frank Zappa']).to eq 51
+        expect(parsed_response['scores']['Don Van Vliet']).to eq 58
       end
     end
   end
