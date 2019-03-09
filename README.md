@@ -123,4 +123,4 @@ Here are some references about how to keep score in bowling:
   * [http://slocums.homestead.com/gamescore.html](http://slocums.homestead.com/gamescore.html)
   * [http://www.bowlinggenius.com/](http://www.bowlinggenius.com/)
 
-Still testing auto-assign.
+More testing auto-assign.
