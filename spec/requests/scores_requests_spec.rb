@@ -17,20 +17,21 @@ RSpec.describe '/scores requests', type: :request do
   end
 
   describe 'POST /scores' do
+    # A perfect game of bowling is 300 points
     context 'happy path - a perfect game' do
       let(:request_body) do
         {
           'Nikola Tesla': [
-            { 'score': 10 },
-            { 'score': 10 },
-            { 'score': 10 },
-            { 'score': 10 },
-            { 'score': 10 },
-            { 'score': 10 },
-            { 'score': 10 },
-            { 'score': 10 },
-            { 'score': 10 },
-            { 'score': 10 },
+            [10],
+            [10],
+            [10],
+            [10],
+            [10],
+            [10],
+            [10],
+            [10],
+            [10],
+            [10, 10, 10],
           ],
         }.to_json
       end
@@ -48,32 +49,33 @@ RSpec.describe '/scores requests', type: :request do
       end
     end
 
+    # For a complete game, the output should be the final score.
     context 'a complete game' do
       let(:request_body) do
         {
           'Frank Zappa': [
-            { 'score': '-' },
-            { 'score': 1 },
-            { 'score': 2 },
-            { 'score': 3 },
-            { 'score': 'F' },
-            { 'score': '3/' },
-            { 'score': 8 },
-            { 'score': 'x' },
-            { 'score': 7 },
-            { 'score': 3 },
+            [3, 5],
+            [0, 10],
+            [1, 9],
+            [5, 4],
+            [10],
+            [2, 0],
+            [10],
+            [10],
+            [7, 2],
+            [7, 1],
           ],
           'Don Van Vliet': [
-            { 'score': '/' },
-            { 'score': 3 },
-            { 'score': 9 },
-            { 'score': 'X' },
-            { 'score': 'f' },
-            { 'score': 1 },
-            { 'score': 'X' },
-            { 'score': '-' },
-            { 'score': 8 },
-            { 'score': 7 },
+            [10],
+            [10],
+            [10],
+            [0, 0],
+            [0, 0],
+            [1, 1],
+            [4, 5],
+            [2, 7],
+            [9, 1],
+            [10, 4, 3],
           ],
         }.to_json
       end
@@ -87,8 +89,90 @@ RSpec.describe '/scores requests', type: :request do
       end
 
       it 'scores the game correctly' do
-        expect(parsed_response['scores']['Frank Zappa']).to eq 51
-        expect(parsed_response['scores']['Don Van Vliet']).to eq 58
+        expect(parsed_response['scores']['Frank Zappa']).to eq 120
+        expect(parsed_response['scores']['Don Van Vliet']).to eq 117
+      end
+    end
+
+    # For an incomplete game, it should score the game so far and output the
+    # scores as they currently stand. The output key `winner` should be whoever
+    # is currently ahead in the score.
+    context 'an incomplete game' do
+      let(:request_body) do
+        {
+          'Tom Rowlands': [
+            [3, 5],
+            [0, 10],
+            [1, 9],
+            [5, 4],
+          ],
+          'Ed Simons': [
+            [10],
+            [10],
+            [10],
+            [0, 0],
+          ],
+        }.to_json
+      end
+
+      it 'responds with 200 status' do
+        expect(response.status).to be 200
+      end
+
+      it 'chooses the correct winner' do
+        expect(parsed_response['winner']).to eq 'Ed Simons'
+      end
+
+      it 'scores the game correctly' do
+        expect(parsed_response['scores']['Tom Rowlands']).to eq 43
+        expect(parsed_response['scores']['Ed Simons']).to eq 60
+      end
+    end
+
+    context 'a malformatted game' do
+      let(:request_body) do
+        {
+          'Duane Allman': [
+            { '3': 5},
+            { '17': 9},
+          ],
+        }
+      end
+
+      it 'responds with 400 status' do
+        expect(response.status).to be 400
+      end
+    end
+
+    context 'an unprocessable game - case 1' do
+      let(:request_body) do
+        {
+          'Herbie Hancock': [
+            [10],
+            [3, 7],
+            [3, 9], # More than 10 pins total
+          ],
+        }
+      end
+
+      it 'responds with 422 status' do
+        expect(response.status).to be 422
+      end
+    end
+
+    context 'an unprocessable game - case 2' do
+      let(:request_body) do
+        {
+          'Gordon Mumma': [
+            [10],
+            [3, 7],
+            [3, 2, 1, 0, 1], # Too many throws in the same frame
+          ],
+        }
+      end
+
+      it 'responds with 422 status' do
+        expect(response.status).to be 422
       end
     end
   end
