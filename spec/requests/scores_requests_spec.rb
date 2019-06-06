@@ -85,7 +85,7 @@ RSpec.describe '/scores requests', type: :request do
       end
 
       it 'chooses the correct winner' do
-        expect(parsed_response['winner']).to eq 'Don Van Vliet'
+        expect(parsed_response['winner']).to eq 'Frank Zappa'
       end
 
       it 'scores the game correctly' do
@@ -136,7 +136,7 @@ RSpec.describe '/scores requests', type: :request do
             { '3': 5},
             { '17': 9},
           ],
-        }
+        }.to_json
       end
 
       it 'responds with 400 status' do
@@ -152,7 +152,7 @@ RSpec.describe '/scores requests', type: :request do
             [3, 7],
             [3, 9], # More than 10 pins total
           ],
-        }
+        }.to_json
       end
 
       it 'responds with 422 status' do
@@ -168,7 +168,7 @@ RSpec.describe '/scores requests', type: :request do
             [3, 7],
             [3, 2, 1, 0, 1], # Too many throws in the same frame
           ],
-        }
+        }.to_json
       end
 
       it 'responds with 422 status' do
