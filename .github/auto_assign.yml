@@ -9,15 +9,18 @@
    reviewers:
     - ccangialose
     - czantany1
-    - dancernerd32
     - em-gazelle
-    - ibratanov
     - lawyu89
     - mattmcginnis
     - mstahl
     - hotfusionman
     - cachilders
     - scabaral
+    - otheogar
+    - sonoilconte
+
+#   - dancernerd32
+#   - ibratanov
 
  # A list of keywords to be skipped the process that add reviewers if pull requests include it
    skipKeywords:
