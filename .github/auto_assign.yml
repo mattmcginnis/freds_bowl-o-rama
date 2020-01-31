@@ -8,10 +8,8 @@
  # A list of reviewers to be added to pull requests (GitHub user name)
    reviewers:
     - ccangialose
-    - czantany1
     - em-gazelle
     - lawyu89
-    - mattmcginnis
     - mstahl
     - hotfusionman
     - cachilders
